@@ -4,6 +4,7 @@ import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 import { getLiveDonors } from '@/app/actions';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 
 // Dark Mode Style
 const darkMapStyle = [
@@ -28,6 +29,43 @@ export default function LiveMap() {
         tilt: 45,
         heading: 0
     });
+
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
+
+    async function getLiveDonors() {
+        try {
+            // 1. Fetch all active donors
+            const { data, error } = await supabase
+                .from('donors')
+                .select('id, latitude, longitude, blood_group') // ONLY fetch these columns
+                .eq('is_active', true);
+
+            if (error) {
+                console.error("Pulse Database Error:", error);
+                return [];
+            }
+
+            if (!data) {
+                console.log("Pulse: No donor data returned");
+                return [];
+            }
+
+            // 2. Return the clean list
+            return data.map(d => ({
+                id: d.id,
+                lat: d.latitude,
+                lng: d.longitude,
+                blood: d.blood_group
+            }));
+
+        } catch (err) {
+            console.error("Pulse Network Error:", err);
+            return [];
+        }
+    }
 
     // 1. Fetch Donors & User Location
     useEffect(() => {
