@@ -24,7 +24,6 @@ export default function PulseHome() {
           {/* (The header, radar, buttons, etc. goes here) */}
         </div>
       )}
-
     </main>
   );
 }

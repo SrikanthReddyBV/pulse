@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation'; // 1. Import Router
+import Link from 'next/link';
 
 export default function IntroSequence({ onComplete }: { onComplete?: () => void }) {
     const [step, setStep] = useState(0);
@@ -118,6 +119,12 @@ export default function IntroSequence({ onComplete }: { onComplete?: () => void 
                             >
                                 Join Pulse <ArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
                             </motion.button>
+                            <Link
+                                href="/map"
+                                className="mt-4 w-full py-4 border border-gray-800 bg-gray-900/50 text-gray-400 font-bold uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 hover:text-white transition-all"
+                            >
+                                View Live Map
+                            </Link>
                         </motion.div>
                     )}
 
